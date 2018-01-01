@@ -8,3 +8,4 @@ dist/
 Deploy/
 *.user
 *.userprefs
+*.log

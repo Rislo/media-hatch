@@ -25,13 +25,15 @@ $msBuild = Resolve-MsBuild
 
 $slnFilePath = Join-Path $scriptDirectory "Backend\MediaHatchServices.sln";
 
-Write-Host "Restoring nuget packages for $($slnFilePath)" -foregroundcolor green
-Start-Process $msBuild ($slnFilePath, "/t:restore") -NoNewWindow -Wait
+$restoreArgs = $slnFilePath, "/t:restore", "/p:Configuration=Release", "/p:Platform=x86"
 
-$BuildArgs = $slnFilePath, "/t:rebuild", "/p:Configuration=Release", "/p:Platform=x86"
+Write-Host "Restoring nuget packages for $($slnFilePath)" -foregroundcolor green
+Start-Process $msBuild $restoreArgs -NoNewWindow -Wait
+
+$rebuildArgs = $slnFilePath, "/t:rebuild", "/p:Configuration=Release", "/p:Platform=x86"
 
 Write-Host "Building $($slnFilePath)" -foregroundcolor green
-Start-Process $msBuild $BuildArgs -NoNewWindow -Wait
+Start-Process $msBuild $rebuildArgs -NoNewWindow -Wait
 
 $releaseDirectory = Join-Path $scriptDirectory "Backend\MediaHatchServices\bin\Release"
 
