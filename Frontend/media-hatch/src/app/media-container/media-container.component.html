@@ -1,0 +1,41 @@
+<section class="container mat-typography">
+  <div class="trapezoid-up tile-background header">
+    <div class=buttons>
+      <button *ngIf="!processing" color=primary mat-icon-button (click)="download()" [disabled]="processed">
+        <mat-icon svgIcon="download"></mat-icon>
+      </button>
+      <loading-spinner *ngIf="processing"></loading-spinner>
+      <button *ngIf="!addingToWishList" color=primary mat-icon-button (click)="addToWishList()" [disabled]="inWishList">
+        <mat-icon svgIcon="schedule"></mat-icon>
+      </button>
+      <loading-spinner *ngIf="addingToWishList"></loading-spinner>
+    </div>
+    <div class=tags>
+      <div *ngFor="let tag of media.tags" class="tag-container trapezoid-down-simple">
+        <div class="tag mat-caption">
+          {{tag}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="title-container tile-background">
+    <div class="title">
+      {{media.fullName}}
+    </div>
+    <div class="size">
+      {{media.size}}
+    </div>
+  </div>
+  <div class="image-row tile-background-secondary">
+    <img class=illustration [src]="media.illustrationUrl">
+  </div>
+  <div class="footer">
+    <div class="description-container tile-background">
+      <div class="description">
+        {{media.description}}
+      </div>
+    </div>
+    <div class="trapezoid-down tile-background">
+    </div>
+  </div>
+</section>

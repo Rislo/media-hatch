@@ -1,0 +1,10 @@
+(deprecated)MediaScraper/HtmlAgilityPack/
+.vs/
+bin/
+obj/
+node_modules/
+packages/
+dist/
+Deploy/
+*.user
+*.userprefs
