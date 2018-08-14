@@ -27,7 +27,7 @@ export class ThreeMbMediaScraper extends MediaScraper {
   private mediaRawNameToScrapedMediaInfo: Map<
     string,
     ThreeMbScrapedMediaInfo
-  > = new Map<string, ThreeMbScrapedMediaInfo>();
+    > = new Map<string, ThreeMbScrapedMediaInfo>();
 
   constructor(maxPageNbScrap: number = 10, customRoute: string = "") {
     super();
@@ -71,6 +71,9 @@ export class ThreeMbMediaScraper extends MediaScraper {
         this._scrapedMedia.push(...pageMedia);
       }
       return this._scrapedMedia;
+    }).catch(error => {
+      const a = 0;
+      return new Array<Media>();
     });
   }
 
@@ -98,7 +101,7 @@ export class ThreeMbMediaScraper extends MediaScraper {
     else
       return `${ThreeMbMediaScraper.baseUrl}/page/${this.currentPage}${
         this.customRoute
-      }`;
+        }`;
   }
 
   private currentPage = 0;

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaHatchServices", "MediaHatchServices\MediaHatchServices.csproj", "{D7EC2C2A-D819-4B8F-8680-87DB6D83F4DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaHatchCore", "..\..\Core\DotNetCore\MediaHatchCore\MediaHatchCore.csproj", "{AC0D6679-05A6-49D4-8BAE-F8FF4F2AD20B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7EC2C2A-D819-4B8F-8680-87DB6D83F4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7EC2C2A-D819-4B8F-8680-87DB6D83F4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7EC2C2A-D819-4B8F-8680-87DB6D83F4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7EC2C2A-D819-4B8F-8680-87DB6D83F4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC0D6679-05A6-49D4-8BAE-F8FF4F2AD20B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC0D6679-05A6-49D4-8BAE-F8FF4F2AD20B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC0D6679-05A6-49D4-8BAE-F8FF4F2AD20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC0D6679-05A6-49D4-8BAE-F8FF4F2AD20B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C2424B30-C23D-4F87-949A-0A619577402E}
+	EndGlobalSection
+EndGlobal
