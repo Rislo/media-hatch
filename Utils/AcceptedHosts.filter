@@ -1,0 +1,72 @@
+[ {
+  "filetypeFilter" : {
+    "enabled" : false,
+    "audioFilesEnabled" : false,
+    "matchType" : "IS",
+    "useRegex" : false,
+    "hashEnabled" : false,
+    "videoFilesEnabled" : false,
+    "docFilesEnabled" : false,
+    "archivesEnabled" : false,
+    "imagesEnabled" : false,
+    "customs" : null
+  },
+  "originFilter" : {
+    "enabled" : false,
+    "matchType" : "IS",
+    "origins" : [ ]
+  },
+  "hosterURLFilter" : {
+    "enabled" : true,
+    "matchType" : "CONTAINS_NOT",
+    "regex" : "(1fichier|mega|filerio|uptobox|zippyshare|mediafire|free)",
+    "useRegex" : true
+  },
+  "onlineStatusFilter" : {
+    "enabled" : false,
+    "matchType" : "IS",
+    "onlineStatus" : "OFFLINE"
+  },
+  "created" : 1547996761161,
+  "sourceURLFilter" : {
+    "enabled" : false,
+    "matchType" : "CONTAINS",
+    "regex" : "",
+    "useRegex" : false
+  },
+  "conditionFilter" : {
+    "enabled" : false,
+    "matchType" : "IS_TRUE",
+    "conditions" : [ ]
+  },
+  "testUrl" : "",
+  "enabled" : true,
+  "valid" : true,
+  "packagenameFilter" : {
+    "enabled" : false,
+    "matchType" : "CONTAINS",
+    "regex" : "",
+    "useRegex" : false
+  },
+  "filenameFilter" : {
+    "enabled" : false,
+    "matchType" : "CONTAINS",
+    "regex" : "",
+    "useRegex" : false
+  },
+  "name" : "Accepted hosts",
+  "matchAlwaysFilter" : {
+    "enabled" : false
+  },
+  "pluginStatusFilter" : {
+    "enabled" : false,
+    "matchType" : "IS",
+    "pluginStatus" : "PREMIUM"
+  },
+  "filesizeFilter" : {
+    "enabled" : false,
+    "from" : 0,
+    "matchType" : "BETWEEN",
+    "to" : 0
+  }
+} ]

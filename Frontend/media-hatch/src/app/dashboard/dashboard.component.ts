@@ -14,11 +14,13 @@ export class DashboardComponent implements OnInit {
   private readonly delta = 5;
   private readonly navbarHeight = 54;
 
+  private allMedia: Observable<Media[]>;
+
   @ViewChild('main') private mainEl: ElementRef;
 
   public headerUp = false;
 
-  public allMedia: Observable<Media[]>;
+  public mediaArray = new Array<Media>();
 
   get searchTerm$() {
     return this.mediaInfoService.searchTerm$;
@@ -32,6 +34,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.allMedia = this.mediaInfoService.lastMediaInfoFetched;
+    this.allMedia.subscribe(this.onAllMediaChanged);
     setInterval(() => {
       if (this.didScroll) {
         this.hasScrolled();
@@ -70,5 +73,13 @@ export class DashboardComponent implements OnInit {
 
   clearSearch() {
     this.searchTerm$.next('');
+  }
+
+  more() {
+    this.mediaInfoService.fetch();
+  }
+
+  private onAllMediaChanged = (mediaArray: Media[]) => {
+    this.mediaArray = mediaArray;
   }
 }

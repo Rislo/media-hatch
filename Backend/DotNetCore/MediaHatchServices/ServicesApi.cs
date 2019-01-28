@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -19,11 +20,9 @@ namespace MediaHatchServices
 		{
 			_downloadManager = new DownloadManagerWatchFolder();
 
-			WoopsaClient client = new WoopsaClient("http://localhost:2000/woopsa");
-			WoopsaBoundClientObject root = client.CreateBoundRoot();
-			_methodScrapeInfo = root.Methods.ByName("scrapeInfoAsync");
-			_methodScrapeLinks = root.Methods.ByName("scrapeLinksAsync");
-			_refreshTimer = new Timer(s => LookForNewMedia(s), null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
+            _client = new WoopsaDynamicClient("http://127.0.0.1:2000/woopsa");
+            
+            _refreshTimer = new Timer(s => LookForNewMedia(s), null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
 		}
 
 		public bool Download(string media)
@@ -81,7 +80,7 @@ namespace MediaHatchServices
 		{
 			string[] moviesToLookFor = RetrieveWishList(_moviesWishListFilePath);
 			string[] tvShowsToLookFor = RetrieveWishList(_tvShowsWishListFilePath);
-			Media[] scrapedMedia = CoreBaseElementFromJson<Media[]>(_methodScrapeInfo.Invoke(new List<IWoopsaValue> { new WoopsaValue(string.Empty) }));
+            Media[] scrapedMedia = CoreBaseElementFromJson<Media[]>(_client.scrapeInfoAsync(string.Empty, 1, 2));
 			List<Media> mediaToDownload = new List<Media>(scrapedMedia.Where(e => (e is TvShowEpisode && tvShowsToLookFor.Contains(e.Name, StringComparer.OrdinalIgnoreCase)) || 
 			                                                                 (e is Movie && moviesToLookFor.Contains(e.Name, StringComparer.OrdinalIgnoreCase) && IsEligibleMovieToDownload((Movie)e))));
 			Parallel.ForEach(mediaToDownload, e => RetrieveLinks(e));
@@ -90,7 +89,7 @@ namespace MediaHatchServices
 
 		private void RetrieveLinks(Media media)
 		{
-			WoopsaValue woopsaReturn = _methodScrapeLinks.Invoke(new List<IWoopsaValue> { new WoopsaValue(media.RawName) });
+            WoopsaValue woopsaReturn = _client.scrapeLinksAsync(media.RawName);
 			media.LinksPackages = new List<LinksPackage>(JsonConvert.DeserializeObject<LinksPackage[]>(woopsaReturn.AsText));
 		}
 
@@ -166,7 +165,7 @@ namespace MediaHatchServices
 
 		private bool IsEligibleMovieToDownload(Movie movie)
 		{
-			return movie.Tags.Intersect(_eligibleMovieTags).Count() == _eligibleMovieTags.Length;
+			return movie.Tags.Intersect(_eligibleMovieTags, StringComparer.OrdinalIgnoreCase).Count() == _eligibleMovieTags.Length;
 		}
 
 		private static T CoreBaseElementFromJson<T>(string json)
@@ -176,13 +175,12 @@ namespace MediaHatchServices
 
 		private object _wishListsLock = new object();
 		private object _processedNamesLock = new object();
-		private string[] _eligibleMovieTags = new string[] { "720p", "brip" };
+		private string[] _eligibleMovieTags = new string[] { "bdrip" };
 		private Timer _refreshTimer;
-		private WoopsaMethod _methodScrapeInfo;
-		private WoopsaMethod _methodScrapeLinks;
 		private DownloadManagerWatchFolder _downloadManager;
 		private string _tvShowsWishListFilePath = "TvShows.wishlist";
 		private string _moviesWishListFilePath = "Movies.wishlist";
 		private List<string> _processedMediaSupportedFullNames;
+        private dynamic _client;
 	}
 }

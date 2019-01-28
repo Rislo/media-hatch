@@ -1,6 +1,6 @@
 import { Media } from "media-hatch-core";
 
-export class ThreeMbScrapedMediaInfo {
+export class HtmlScrapedMediaInfo {
   public get media(): Media {
     return this._media;
   }

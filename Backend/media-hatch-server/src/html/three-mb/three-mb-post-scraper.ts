@@ -1,4 +1,4 @@
-import { ThreeMbScrapedMediaInfo } from "./three-mb-scraped-media-info";
+import { HtmlScrapedMediaInfo } from "../html-scraped-media-info";
 import * as cheerio from "cheerio";
 import * as xregexp from "xregexp";
 import { isUndefined, isNull } from "util";
@@ -52,7 +52,7 @@ export class ThreeMbPostScraper {
 
   private readonly notFoundTitle = "Error 404 - Not Found";
 
-  public Scrape(htmlPost: Cheerio): ThreeMbScrapedMediaInfo {
+  public Scrape(htmlPost: Cheerio): HtmlScrapedMediaInfo {
     let media: Media = undefined;
     const classes = htmlPost.attr("class").split(" ");
     const categories = classes.filter(value => value.startsWith("category"));
@@ -130,6 +130,6 @@ export class ThreeMbPostScraper {
         media.tags.splice(quality720pIndex, 1);
       }
     }
-    return new ThreeMbScrapedMediaInfo(media, pageUrl);
+    return new HtmlScrapedMediaInfo(media, pageUrl);
   }
 }

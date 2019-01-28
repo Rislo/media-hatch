@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
     iconRegistry.addSvgIcon('download', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/download.svg'));
     iconRegistry.addSvgIcon('search', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/search.svg'));
     iconRegistry.addSvgIcon('cancel', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/cancel.svg'));
+    iconRegistry.addSvgIcon('arrow-down', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/arrow-down.svg'));
   }
 
   ngOnInit() {

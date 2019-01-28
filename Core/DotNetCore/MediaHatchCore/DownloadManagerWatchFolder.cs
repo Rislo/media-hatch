@@ -66,21 +66,24 @@ namespace MediaHatchCore
 			string watchFolderPath;
 			if (_mediaTypeToWatchFolderPath.TryGetValue(media.GetType(), out watchFolderPath))
 			{
-				string filePathSupportedMediaFullName = media.FilePathSupportedFullName();
-				string filePath = Path.Combine(watchFolderPath, $"{filePathSupportedMediaFullName}{_defaultLinksFileExtension}");
-				string addedFilePath = Path.Combine(watchFolderPath, _linksFileAddedFolderName, $"{filePathSupportedMediaFullName}{_defaultLinksFileExtension}");
-				if (!File.Exists(addedFilePath))
-				{
-					string crawlJobContent = $"autoStart=TRUE\nautoConfirm=TRUE\ntext={media.GetFirstFavoriteLinksPackage(_orderedFavoriteFileHosts).ConcatenatedLinks}\npackageName={filePathSupportedMediaFullName}\ncomment={filePathSupportedMediaFullName}";
-					string downloadFolderPath;
-					if (_mediaTypeToDownloadFolderPath.TryGetValue(media.GetType(), out downloadFolderPath))
-					{
-						if (_downloadFolderPerTvShow && media is TvShowEpisode)
-							downloadFolderPath = Path.Combine(downloadFolderPath, media.FilePathSupportedName());
-						crawlJobContent += $"\ndownloadFolder={downloadFolderPath}";
-					}
-					File.WriteAllText(filePath, crawlJobContent);
-				}
+                if (Directory.Exists(watchFolderPath))
+                {
+                    string filePathSupportedMediaFullName = media.FilePathSupportedFullName();
+                    string filePath = Path.Combine(watchFolderPath, $"{filePathSupportedMediaFullName}{_defaultLinksFileExtension}");
+                    string addedFilePath = Path.Combine(watchFolderPath, _linksFileAddedFolderName, $"{filePathSupportedMediaFullName}{_defaultLinksFileExtension}");
+                    if (!File.Exists(addedFilePath))
+                    {
+                        string crawlJobContent = $"autoStart=TRUE\nautoConfirm=TRUE\ntext={media.GetFirstFavoriteLinksPackage(_orderedFavoriteFileHosts).ConcatenatedLinks}\npackageName={filePathSupportedMediaFullName}\ncomment={filePathSupportedMediaFullName}";
+                        string downloadFolderPath;
+                        if (_mediaTypeToDownloadFolderPath.TryGetValue(media.GetType(), out downloadFolderPath))
+                        {
+                            if (_downloadFolderPerTvShow && media is TvShowEpisode)
+                                downloadFolderPath = Path.Combine(downloadFolderPath, media.FilePathSupportedName());
+                            crawlJobContent += $"\ndownloadFolder={downloadFolderPath}";
+                        }
+                        File.WriteAllText(filePath, crawlJobContent);
+                    }
+                }
 			}
 		}
 

@@ -9,3 +9,9 @@ Deploy/
 *.user
 *.userprefs
 *.log
+
+Utils/\(old\)archlinuxJDRules\.json
+
+Utils/DownloadStarted\.js
+
+Utils/RenameFileWithPackageName\.packagizer
