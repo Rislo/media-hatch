@@ -6,4 +6,4 @@ start dotnet MediaHatchServices.dll
 timeout /t 5
 cd ../media-hatch
 start node app.js
-start chrome "http://localhost:2020/
+start firefox "http://localhost:2020/

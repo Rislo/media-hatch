@@ -78,13 +78,17 @@ namespace MediaHatchServices
 
 		private void LookForNewMedia(object state)
 		{
-			string[] moviesToLookFor = RetrieveWishList(_moviesWishListFilePath);
-			string[] tvShowsToLookFor = RetrieveWishList(_tvShowsWishListFilePath);
-            Media[] scrapedMedia = CoreBaseElementFromJson<Media[]>(_client.scrapeInfoAsync(string.Empty, 1, 2));
-			List<Media> mediaToDownload = new List<Media>(scrapedMedia.Where(e => (e is TvShowEpisode && tvShowsToLookFor.Contains(e.Name, StringComparer.OrdinalIgnoreCase)) || 
-			                                                                 (e is Movie && moviesToLookFor.Contains(e.Name, StringComparer.OrdinalIgnoreCase) && IsEligibleMovieToDownload((Movie)e))));
-			Parallel.ForEach(mediaToDownload, e => RetrieveLinks(e));
-			Download(mediaToDownload);
+            try
+            {
+                string[] moviesToLookFor = RetrieveWishList(_moviesWishListFilePath);
+                string[] tvShowsToLookFor = RetrieveWishList(_tvShowsWishListFilePath);
+                Media[] scrapedMedia = CoreBaseElementFromJson<Media[]>(_client.scrapeInfoAsync(string.Empty, 1, 2));
+                List<Media> mediaToDownload = new List<Media>(scrapedMedia.Where(e => (e is TvShowEpisode && tvShowsToLookFor.Contains(e.Name, StringComparer.OrdinalIgnoreCase)) ||
+                                                                                 (e is Movie && moviesToLookFor.Contains(e.Name, StringComparer.OrdinalIgnoreCase) && IsEligibleMovieToDownload((Movie)e))));
+                Parallel.ForEach(mediaToDownload, e => RetrieveLinks(e));
+                Download(mediaToDownload);
+            }
+            catch (Exception e) { Console.WriteLine($"Unexpected error occured => {e.GetFullMessage()}"); }
 		}
 
 		private void RetrieveLinks(Media media)

@@ -39,7 +39,7 @@ export class DdlValleyScraper extends HtmlMediaScraper {
 				return Promise.resolve(scrapedMediaInfo.media.linksPackages);
 			}
 		} else {
-			return Promise.reject('Media not found');
+			return Promise.reject(new Error('Media not found'));
 		}
 	}
 

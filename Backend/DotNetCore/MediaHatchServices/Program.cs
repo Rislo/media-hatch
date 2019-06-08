@@ -36,6 +36,10 @@ namespace MediaHatchServices
 				Console.WriteLine("SocketException: {0}", e.Message);
 				Console.ReadLine();
 			}
+            catch(Exception e)
+            {
+                Console.WriteLine($"Unexpected error occured {e.Message}");
+            }
 		}
 	}
 }
