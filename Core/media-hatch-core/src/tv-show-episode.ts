@@ -1,26 +1,30 @@
 import { Media } from './media';
+import { JsonObject, JsonProperty } from 'json2typescript';
 
+@JsonObject()
 export class TvShowEpisode extends Media {
-  public static typeName = 'MediaHatchCore.TvShowEpisode';
+	public static typeName = 'MediaHatchCore.TvShowEpisode';
 
-  public seasonNb: number;
-  public episodeNb: number[];
+	@JsonProperty('seasonNb')
+	public seasonNb: number = undefined;
 
-  public get fullName() {
-    let episodeNumbers = '';
-    for (let i = 0; i < this.episodeNb.length; i++) {
-      episodeNumbers += `E${this.stringifyNumber(this.episodeNb[i])}`;
-    }
-    return `${this.name} S${this.stringifyNumber(this.seasonNb)}${episodeNumbers}`;
-  }
+	@JsonProperty('episodeNb', [Number])
+	public episodeNb: number[] = undefined;
 
-  constructor() {
-    super();
-    this.episodeNb = new Array<number>();
-    this.type = TvShowEpisode.typeName;
-  }
+	public get fullName() {
+		let episodeNumbers = '';
+		for (let i = 0; i < this.episodeNb.length; i++) {
+			episodeNumbers += `E${this.stringifyNumber(this.episodeNb[i])}`;
+		}
+		return `${this.name} S${this.stringifyNumber(this.seasonNb)}${episodeNumbers}`;
+	}
 
-  private stringifyNumber(number: Number): string {
-    return number < 10 ? `0${number}` : number.toString();
-  }
+	constructor() {
+		super(TvShowEpisode.typeName);
+		this.episodeNb = new Array<number>();
+	}
+
+	private stringifyNumber(number: Number): string {
+		return number < 10 ? `0${number}` : number.toString();
+	}
 }

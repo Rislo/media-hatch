@@ -10,6 +10,7 @@
 			"name": "Debug",
 			"program": "${workspaceRoot}/src/server.ts",
 			"cwd": "${workspaceRoot}",
+			"protocol": "inspector",
 			"outFiles": ["${workspaceRoot}/dist/**/*.js"],
 			"sourceMaps": true
 		}

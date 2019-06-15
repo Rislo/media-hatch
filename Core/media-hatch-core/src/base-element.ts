@@ -1,3 +1,11 @@
+import { JsonObject, JsonProperty } from 'json2typescript';
+
+@JsonObject()
 export abstract class BaseElement {
-  public type: string;
+	constructor(type: string) {
+		this.type = type;
+	}
+
+	@JsonProperty('type')
+	public type: string = undefined;
 }
