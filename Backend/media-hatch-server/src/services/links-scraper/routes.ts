@@ -6,6 +6,6 @@ const router = Router();
 const controller = new Controller();
 router.get('/scrapeInfoAsync', controller.scrapeInfo);
 router.get('/scrapeLinksAsync', controller.scrapeLinks);
-router.get('/download', controller.download);
+router.post('/download', controller.download);
 
 export default router;

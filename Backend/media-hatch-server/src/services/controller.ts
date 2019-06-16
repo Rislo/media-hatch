@@ -21,7 +21,7 @@ export class Controller {
 	};
 
 	private downloadSchema = {
-		media: Joi.string()
+		mediaRawName: Joi.string()
 	};
 
 	public scrapeInfo = async (req: Request, res: Response) => {
@@ -33,26 +33,22 @@ export class Controller {
 	public scrapeLinks = async (req: Request, res: Response) => {
 		const params = await Joi.validate(req.query, this.scrapeLinksSchema);
 		const result = await this.mediaScraper.scrapeLinks(params.mediaRawName);
-		res.status(200).send(result);
-	};
-
-	public download = async (req: Request, res: Response) => {
-		const params = await Joi.validate(req.query, this.downloadSchema);
-		const mediaFactory = Factories.getFactory<Media>(params.media.type);
-		if (mediaFactory) {
-			const media = JsonToTypedHelper.deserialize<Media>(params.media, mediaFactory);
-			if (media) {
-				await this.retrieveLinks(media);
-				await this.downloadManager.download(media); // TODO update wishlists, add a file-cache service to manage list of strings
-			}
-			res.status(200).send(media && media.linksPackageAvailable);
+		if (result) {
+			res.status(200).send(result.linksPackages);
 		} else {
-			throw new HTTP400Error(`Media '${params.media}' could not be deserialized`);
+			throw new HTTP404Error(`Media '${params.mediaRawName}' not found`);
 		}
 	};
 
-	private async retrieveLinks(media: Media) {
-		const links = await this.mediaScraper.scrapeLinks(media.rawName);
-		media.linksPackages = links;
-	}
+	public download = async (req: Request, res: Response) => {
+		const params = await Joi.validate(req.body, this.downloadSchema);
+		const media = await this.mediaScraper.scrapeLinks(params.mediaRawName);
+		if (media) {
+			await this.downloadManager.download(media); // TODO update wishlists, add a file-cache service to manage list of strings
+
+			res.status(200).send();
+		} else {
+			throw new HTTP404Error(`Media '${params.mediaRawName}' not found`);
+		}
+	};
 }

@@ -40,7 +40,7 @@ export abstract class Media extends BaseElement {
 		if (this.linksPackageAvailable) {
 			for (let fileHost of orderedFavoriteFileHosts) {
 				for (let linksPackage of this.linksPackages) {
-					if (linksPackage.fileHost === fileHost) {
+					if (linksPackage.fileHost.startsWith(fileHost)) {
 						return linksPackage;
 					}
 				}

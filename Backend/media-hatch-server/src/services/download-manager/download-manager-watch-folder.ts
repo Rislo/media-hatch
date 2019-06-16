@@ -75,7 +75,7 @@ export class DownloadManagerWatchFolder extends DownloadManager {
 				const fileName = filePathSupportedMediaFullName + DownloadManagerWatchFolder.defaultLinksFileExtension;
 				const filePath = path.join(watchFolderPath, fileName);
 				const addedFilePath = path.join(watchFolderPath, DownloadManagerWatchFolder.linksFileAddedFolderName, fileName);
-				if (!fs.pathExists(addedFilePath)) {
+				if (!(await fs.pathExists(addedFilePath))) {
 					let crawlJobContent = `autoStart=TRUE\nautoConfirm=TRUE\ntext=${
 						media.getFirstFavoriteLinksPackage(this.orderedFavoriteFileHosts).concatenatedLinks
 					}\npackageName=${filePathSupportedMediaFullName}\ncomment=${filePathSupportedMediaFullName}`;

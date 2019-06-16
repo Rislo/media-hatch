@@ -1,9 +1,8 @@
-import { Media, LinksPackage } from 'media-hatch-core';
+import { Media } from 'media-hatch-core';
 import { HtmlMediaScraper } from '../html-media-scraper';
 import { HtmlScrapedMediaInfo } from '../html-scraped-media-info';
 import { DdlValleyPostScraper } from './ddl-valley-post-scraper';
 import { DdlValleyLinksScraper } from './ddl-valley-links-scraper';
-import { HTTP404Error } from '../../../../utils/http-errors';
 
 export class DdlValleyScraper extends HtmlMediaScraper {
 	public static postScraper = new DdlValleyPostScraper();
@@ -29,16 +28,17 @@ export class DdlValleyScraper extends HtmlMediaScraper {
 		}
 	}
 
-	public scrapeLinks(mediaRawName: string): Promise<LinksPackage[]> {
+	public async scrapeLinks(mediaRawName: string): Promise<Media> {
 		const scrapedMediaInfo = this.mediaRawNameToScrapedMediaInfo.get(mediaRawName);
 		if (scrapedMediaInfo) {
 			if (!scrapedMediaInfo.media.linksPackageAvailable) {
-				return DdlValleyScraper.linksScraper.scrape(scrapedMediaInfo);
+				scrapedMediaInfo.media.linksPackages = await DdlValleyScraper.linksScraper.scrape(scrapedMediaInfo);
+				return scrapedMediaInfo.media;
 			} else {
-				return Promise.resolve(scrapedMediaInfo.media.linksPackages);
+				return Promise.resolve(scrapedMediaInfo.media);
 			}
 		} else {
-			throw new HTTP404Error(`Media '${mediaRawName}' not found`);
+			return null;
 		}
 	}
 
