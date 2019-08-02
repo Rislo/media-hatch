@@ -19,7 +19,7 @@
   "hosterURLFilter" : {
     "enabled" : true,
     "matchType" : "CONTAINS_NOT",
-    "regex" : "(1fichier|mega|filerio|uptobox|zippyshare|mediafire|free)",
+    "regex" : "(1fichier|mega|filerio|uptobox|zippyshare|mediafire|free|filesupload)",
     "useRegex" : true
   },
   "onlineStatusFilter" : {

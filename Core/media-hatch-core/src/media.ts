@@ -33,6 +33,9 @@ export abstract class Media extends BaseElement {
 	@JsonProperty('size')
 	public size: string = undefined;
 
+	@JsonProperty('requested')
+	public requested = false;
+
 	public get linksPackageAvailable(): boolean {
 		return this.linksPackages && this.linksPackages.length > 0;
 	}

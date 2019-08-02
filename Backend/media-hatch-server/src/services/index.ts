@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import linksScraperRoutes from './links-scraper/routes';
+import allRoutes from './routes';
 import { Factories } from './utils/factories';
 import { TvShowEpisode, Movie } from 'media-hatch-core';
 
@@ -8,6 +8,6 @@ Factories.register(TvShowEpisode.typeName, TvShowEpisode);
 
 const routes = Router();
 
-routes.use('/', linksScraperRoutes);
+routes.use('/', allRoutes);
 
 export default routes;
