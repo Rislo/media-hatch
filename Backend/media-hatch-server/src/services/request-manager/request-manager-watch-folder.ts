@@ -51,19 +51,23 @@ export class RequestManagerWatchFolder extends RequestManager {
     }
   }
 
-  public async getRequestedMediaSupportedFullNames(): Promise<string[]> {
+  public async getRequestedMediaFilePathSupportedFullNames(): Promise<string[]> {
     const processedMediaFullNames = new Array<string>();
     for (const folder of this.mediaFactoryToWatchFolderPath.values()) {
-      processedMediaFullNames.push(
-        ...(await fs.readdir(folder))
-          .filter(s => s.endsWith(RequestManagerWatchFolder.defaultLinksFileExtension))
-          .map(s => path.basename(s, path.extname(s)))
-      );
-      processedMediaFullNames.push(
-        ...(await fs.readdir(path.join(folder, RequestManagerWatchFolder.linksFileAddedFolderName)))
-          .filter(s => s.endsWith(RequestManagerWatchFolder.defaultLinksFileExtension))
-          .map(s => path.basename(s, path.extname(s)))
-      );
+      try {
+        processedMediaFullNames.push(
+          ...(await fs.readdir(folder))
+            .filter(s => s.endsWith(RequestManagerWatchFolder.defaultLinksFileExtension))
+            .map(s => path.basename(s, path.extname(s)))
+        );
+      } catch {}
+      try {
+        processedMediaFullNames.push(
+          ...(await fs.readdir(path.join(folder, RequestManagerWatchFolder.linksFileAddedFolderName)))
+            .filter(s => s.endsWith(RequestManagerWatchFolder.defaultLinksFileExtension))
+            .map(s => path.basename(s, path.extname(s)))
+        );
+      } catch {}
     }
     return [...new Set(processedMediaFullNames)];
   }
@@ -89,6 +93,7 @@ export class RequestManagerWatchFolder extends RequestManager {
             crawlJobContent += `\ndownloadFolder=${downloadFolderPath}`;
           }
           await fs.writeFile(filePath, crawlJobContent);
+          media.requested = true;
         }
       }
     }

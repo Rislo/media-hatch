@@ -1,6 +1,6 @@
 import { FileSyncedStringSet } from '../utils/file-cache/file-synced-string-set';
 import { WishListsManager } from './wish-lists-manager';
-import { Media, Movie, TvShowEpisode } from 'media-hatch-core';
+import { Movie, TvShowEpisode } from 'media-hatch-core';
 import { Injectable } from 'injection-js';
 
 @Injectable()
@@ -10,24 +10,28 @@ export class WishListsFileManager extends WishListsManager {
   public movies = new FileSyncedStringSet(`Movies${WishListsFileManager.defaultExtension}`);
   public tvShows = new FileSyncedStringSet(`TvShows${WishListsFileManager.defaultExtension}`);
 
-  public addToWishList(media: Media) {
-    const wishList = this.getWishListFromMedia(media);
+  public addToWishList(mediaName: string, type: new () => object) {
+    const wishList = this.getWishListFromType(type);
     if (wishList) {
-      wishList.addItem(media.name);
+      wishList.addItem(mediaName);
     }
   }
 
-  public removeFromWishList(media: Media) {
-    const wishList = this.getWishListFromMedia(media);
+  public removeFromWishList(mediaName: string, type: new () => object) {
+    const wishList = this.getWishListFromType(type);
     if (wishList) {
-      wishList.removeItem(media.name);
+      wishList.removeItem(mediaName);
     }
   }
 
-  private getWishListFromMedia(media: Media) {
-    if (media instanceof Movie) {
+  public async getWishList(type: new () => object) {
+    return Array.from(await this.getWishListFromType(type).getCurrentItems());
+  }
+
+  private getWishListFromType(type: new () => object) {
+    if (type === Movie) {
       return this.movies;
-    } else if (media instanceof TvShowEpisode) {
+    } else if (type === TvShowEpisode) {
       return this.tvShows;
     } else {
       return null;

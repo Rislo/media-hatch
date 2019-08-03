@@ -7,26 +7,23 @@ import { Injectable } from 'injection-js';
 
 @Injectable()
 export class DdlValleyScraper extends HtmlMediaScraper {
-  public static postScraper = new DdlValleyPostScraper();
-  public static linksScraper = new DdlValleyLinksScraper();
+  private postScraper = new DdlValleyPostScraper();
+  private linksScraper = new DdlValleyLinksScraper();
 
+  private postRawTitleToMedia: Map<string, Media[]> = new Map<string, Media[]>();
   private mediaRawNameToScrapedMediaInfo: Map<string, HtmlScrapedMediaInfo> = new Map<string, HtmlScrapedMediaInfo>();
 
-  public async scrapeInfo(searchTerm: string, fromPage = 0, pages = 1): Promise<Iterable<Media>> {
-    this.clear();
-    fromPage = fromPage == 1 ? 0 : fromPage;
-    if (fromPage == 0) {
-      this.mediaRawNameToScrapedMediaInfo.clear();
-    }
+  public async scrapeInfo(searchTerm: string, fromPage = 0, pages = 1): Promise<Array<Media>> {
     if (searchTerm) {
       if (this.tryManageSearchTerm(searchTerm)) {
         return this.scrapeInfoInternal(fromPage, pages);
       }
     } else {
       this.customRoute = 'category/tv-shows';
-      await this.scrapeInfoInternal(fromPage, pages);
+      const scrapedMedia = await this.scrapeInfoInternal(fromPage, pages);
       this.customRoute = 'category/movies';
-      return this.scrapeInfoInternal(fromPage, pages);
+      scrapedMedia.push(...(await this.scrapeInfoInternal(fromPage, pages)));
+      return scrapedMedia.sort((a, b) => b.uploadDate.getTime() - a.uploadDate.getTime());
     }
   }
 
@@ -34,7 +31,7 @@ export class DdlValleyScraper extends HtmlMediaScraper {
     const scrapedMediaInfo = this.mediaRawNameToScrapedMediaInfo.get(mediaRawName);
     if (scrapedMediaInfo) {
       if (!scrapedMediaInfo.media.linksPackageAvailable) {
-        scrapedMediaInfo.media.linksPackages = await DdlValleyScraper.linksScraper.scrape(scrapedMediaInfo);
+        scrapedMediaInfo.media.linksPackages = await this.linksScraper.scrape(scrapedMediaInfo);
         return scrapedMediaInfo.media;
       } else {
         return Promise.resolve(scrapedMediaInfo.media);
@@ -44,7 +41,8 @@ export class DdlValleyScraper extends HtmlMediaScraper {
     }
   }
 
-  private async scrapeInfoInternal(fromPage: number, pages: number): Promise<Iterable<Media>> {
+  private async scrapeInfoInternal(fromPage: number, pages: number): Promise<Array<Media>> {
+    const scrapedMedia = new Array<Media>();
     try {
       this.currentPage = fromPage;
       const toPage = fromPage + pages;
@@ -54,24 +52,36 @@ export class DdlValleyScraper extends HtmlMediaScraper {
         do {
           const htmlDocument = await htmlDocumentPromise;
           lastLoop = this.currentPage == toPage;
-          if (!lastLoop) htmlDocumentPromise = HtmlMediaScraper.getHtmlDocument(this.getNextPageUrl());
+          if (!lastLoop) {
+            htmlDocumentPromise = HtmlMediaScraper.getHtmlDocument(this.getNextPageUrl());
+          }
 
           const posts = htmlDocument.find('.post');
           for (let i = 0; i < posts.length; i++) {
-            for (const scrapedMediaInfo of await DdlValleyScraper.postScraper.scrape(posts.eq(i))) {
-              if (scrapedMediaInfo) {
-                if (scrapedMediaInfo.media) {
-                  this.mediaRawNameToScrapedMediaInfo.set(scrapedMediaInfo.media.rawName, scrapedMediaInfo);
-                  this._scrapedMedia.push(scrapedMediaInfo.media);
+            const postRawTitle = this.postScraper.scrapeRawTitle(posts.eq(i));
+            if (postRawTitle) {
+              if (this.postRawTitleToMedia.has(postRawTitle)) {
+                scrapedMedia.push(...this.postRawTitleToMedia.get(postRawTitle));
+              } else {
+                const postMediaArray = new Array<Media>();
+                this.postRawTitleToMedia.set(postRawTitle, postMediaArray);
+                for (const scrapedMediaInfo of await this.postScraper.scrape(postRawTitle, posts.eq(i), this.linksScraper)) {
+                  if (scrapedMediaInfo) {
+                    if (scrapedMediaInfo.media) {
+                      postMediaArray.push(scrapedMediaInfo.media);
+                      this.mediaRawNameToScrapedMediaInfo.set(scrapedMediaInfo.media.rawName, scrapedMediaInfo);
+                      scrapedMedia.push(scrapedMediaInfo.media);
+                    }
+                  }
                 }
               }
             }
           }
         } while (!lastLoop);
       }
-      return this._scrapedMedia;
     } catch (e) {
-      return new Array<Media>();
+    } finally {
+      return scrapedMedia;
     }
   }
 

@@ -4,9 +4,10 @@ import { rootInjector } from '../root-injector';
 
 const router = Router();
 
-const controller = rootInjector.get(Controller);
-router.get('/scrape-info', controller.scrapeInfo);
-router.get('/scrape-links', controller.scrapeLinks);
+const controller: Controller = rootInjector.get(Controller);
+router.get('/media', controller.scrapeInfo);
 router.post('/request', controller.request);
+router.get('/wish-list', controller.getWishList);
+router.post('/wish-list/add', controller.addToWishList);
 
 export default router;

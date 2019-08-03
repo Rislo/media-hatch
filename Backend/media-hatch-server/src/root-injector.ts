@@ -5,6 +5,7 @@ import { RequestManagerWatchFolder } from './services/request-manager/request-ma
 import { WishListsManager } from './services/wish-lists-manager/wish-lists-manager';
 import { WishListsFileManager } from './services/wish-lists-manager/wish-lists-file-manager';
 import { Controller } from './services/controller';
+import { MediaHatchService } from './services/media-hatch-service';
 import { ReflectiveInjector } from 'injection-js';
 
 export const rootInjector = ReflectiveInjector.resolveAndCreate([
@@ -20,5 +21,6 @@ export const rootInjector = ReflectiveInjector.resolveAndCreate([
     provide: WishListsManager,
     useClass: WishListsFileManager
   },
+  MediaHatchService,
   Controller
 ]);

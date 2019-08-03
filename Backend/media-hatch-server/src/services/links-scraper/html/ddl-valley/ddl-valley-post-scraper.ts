@@ -1,8 +1,9 @@
 import { LinksPackage, Media, Movie, TvShowEpisode } from 'media-hatch-core';
+import moment from 'moment';
 import * as xregexp from 'xregexp';
 
 import { HtmlScrapedMediaInfo } from '../html-scraped-media-info';
-import { DdlValleyScraper } from './ddl-valley-scraper';
+import { DdlValleyLinksScraper } from './ddl-valley-links-scraper';
 import { TvShowPreviewData } from './tv-show-preview-data';
 
 export class DdlValleyPostScraper {
@@ -10,39 +11,29 @@ export class DdlValleyPostScraper {
 
   private movieTitleYearRegex = xregexp.build('(?<title>{{0}})S*\\.(?<year>{{1}})\\.', ['.*', '[0-9]{4}'], 'i');
 
-  private tagPrefix = 'tag-';
-  private savedTags = ['1080p', '720p', 'hdrip', 'dvdrip', 'brip', 'hdtv', 'web-dl', 'hdcam'];
-  private titleSuffixes = [
-    '720p',
-    '1080p',
-    'hdrip',
-    'dvdrip',
-    'brrip',
-    'hdtv',
-    'web-dl',
-    'hdcam',
-    'hqmic',
-    'nitro',
-    'dvdscr',
-    'limited',
-    'ppv'
-  ];
-
   private readonly notFoundTitle = 'Error 404 - Not Found';
 
-  public async scrape(htmlPost: Cheerio): Promise<HtmlScrapedMediaInfo[]> {
+  public scrapeRawTitle(htmlPost: Cheerio) {
+    const titleNode = htmlPost.prev().children('a');
+    const rawTitle = titleNode.text();
+    if (rawTitle === this.notFoundTitle) {
+      return undefined;
+    } else {
+      return rawTitle;
+    }
+  }
+
+  public async scrape(rawTitle: string, htmlPost: Cheerio, linksScraper: DdlValleyLinksScraper): Promise<HtmlScrapedMediaInfo[]> {
     let media: Media = undefined;
+    const momentDate = moment.utc(htmlPost.find('.date').text(), 'MMM Do, YYYY');
+    const uploadDate = momentDate.isValid() ? momentDate.toDate() : new Date(0);
     const imgUrl = htmlPost
       .find('.poster')
       .children('img')
       .attr('src');
     const titleNode = htmlPost.prev().children('a');
     const pageUrl = titleNode.attr('href');
-    const rawTitle = titleNode.text();
     const description = htmlPost.find('.plot').text();
-    if (rawTitle === this.notFoundTitle) {
-      return undefined;
-    }
     const tagsNodes = htmlPost
       .find('.genre.fl.cl')
       .children()
@@ -85,9 +76,10 @@ export class DdlValleyPostScraper {
           media = tvShow;
         } else {
           tvShow.description = description;
+          tvShow.uploadDate = uploadDate;
           tvShow.illustrationUrl = imgUrl;
           tvShow.tags = tvShow.tags.concat(tags);
-          const linksPackages = await DdlValleyScraper.linksScraper.scrape(new HtmlScrapedMediaInfo(tvShow, pageUrl));
+          const linksPackages = await linksScraper.scrape(new HtmlScrapedMediaInfo(tvShow, pageUrl));
           const episodeNbToTvShow = new Map<number, TvShowEpisode>();
           for (const linksPackage of linksPackages) {
             const episodeNbToPackage = new Map<number, LinksPackage>();
@@ -122,6 +114,7 @@ export class DdlValleyPostScraper {
     }
     if (media) {
       media.rawName = rawTitle;
+      media.uploadDate = uploadDate;
       media.description = description;
       media.illustrationUrl = imgUrl;
       media.tags = media.tags.concat(tags);

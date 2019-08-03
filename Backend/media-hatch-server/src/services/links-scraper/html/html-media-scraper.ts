@@ -1,6 +1,6 @@
 import * as rp from 'request-promise-native';
 import * as cheerio from 'cheerio';
-import { MediaScraper, Media } from 'media-hatch-core';
+import { MediaScraper } from 'media-hatch-core';
 
 export abstract class HtmlMediaScraper extends MediaScraper {
   public static async getHtmlDocument(url: string, options?: rp.RequestPromiseOptions): Promise<Cheerio> {
@@ -12,10 +12,6 @@ export abstract class HtmlMediaScraper extends MediaScraper {
 
   protected get pageRoute() {
     return 'page';
-  }
-
-  protected clear() {
-    this._scrapedMedia = new Array<Media>();
   }
 
   protected currentPage = 0;

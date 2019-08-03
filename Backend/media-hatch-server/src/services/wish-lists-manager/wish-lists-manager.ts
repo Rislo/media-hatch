@@ -1,7 +1,7 @@
-import { Media } from 'media-hatch-core';
-
 export abstract class WishListsManager {
-  public abstract addToWishList(media: Media);
+  public abstract addToWishList(mediaName: string, type: new () => object);
 
-  public abstract removeFromWishList(media: Media);
+  public abstract removeFromWishList(mediaName: string, type: new () => object);
+
+  public abstract getWishList(type: new () => object): Promise<string[]>;
 }
