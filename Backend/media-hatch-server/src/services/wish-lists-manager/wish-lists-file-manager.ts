@@ -14,7 +14,9 @@ export class WishListsFileManager extends WishListsManager {
     const wishList = this.getWishListFromType(type);
     if (wishList) {
       wishList.addItem(mediaName);
+      return true;
     }
+    return false;
   }
 
   public removeFromWishList(mediaName: string, type: new () => object) {

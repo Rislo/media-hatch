@@ -1,0 +1,200 @@
+@import './theme.scss';
+
+@font-face {
+  font-family: 'Orkney';
+  src: url('/assets/fonts/Orkney Light.otf');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Prime';
+  src: url('/assets/fonts/Prime Light.otf');
+  font-weight: 300;
+  font-style: normal;
+}
+
+html,
+body {
+  margin: 0px;
+  height: 100%;
+}
+
+.tile-background {
+  background-color: $tile-background;
+}
+
+.tile-background-secondary {
+  background-color: $tile-background-secondary;
+}
+
+.loading-div {
+  background-image: url('./assets/icons/background.svg');
+  background-repeat: repeat-y;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+}
+
+.background-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $primary67;
+  height: 100%;
+}
+
+.loading-title {
+  margin-top: 32px;
+}
+
+.m-square {
+  background-color: $foreground-inverse;
+  -webkit-animation: m-squareGridScaleDelay 1.3s infinite ease-in-out;
+  animation: m-squareGridScaleDelay 1.3s infinite ease-in-out;
+}
+
+@mixin m-square($number, $delay) {
+  .m-square-#{$number} {
+    grid-area: $number;
+    -webkit-animation-delay: $delay;
+    animation-delay: $delay;
+  }
+}
+
+.m-square-grid {
+  display: grid;
+  width: 300px;
+  height: 167.857px;
+  grid-template-columns: 5.714% 5.714% 2.857% 8.5715% 2.857% 2.857% 5.714% 2.857% 2.857% 2.857% 5.714% 2.857% 5.714% 2.857% 2.857% 2.857% 5.714% 2.857% 2.857% 8.5715% 2.857% 5.714% 5.714%;
+  grid-template-rows: 10.526% 10.526% 5.263% 10.526% 10.526% 5.263% 10.526% 10.526% 5.263% 10.526% 10.526%;
+  grid-template-areas:
+    '.. .. .. .. .. .. .. .. a1 a1 a1 .. .. .. a2 a2 a2 .. c3 c3 .. c4 c4'
+    '.. .. .. .. .. .. a3 .. a1 a1 a1 .. a4 .. a2 a2 a2 .. c3 c3 .. c4 c4'
+    '.. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..'
+    '.. .. .. .. a5 a5 a5 .. a6 a6 a6 .. a7 a7 a7 .. a8 .. a9 a9 .. b0 ..'
+    '.. .. .. .. a5 a5 a5 .. a6 a6 a6 .. a7 a7 a7 .. .. .. a9 a9 .. .. ..'
+    '.. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..'
+    '.. .. .. b1 b1 .. .. .. b2 b2 b2 .. b3 b3 b3 .. b4 b4 b4 .. .. .. ..'
+    '.. b5 .. b1 b1 .. b6 .. b2 b2 b2 .. b3 b3 b3 .. b4 b4 b4 .. .. .. ..'
+    '.. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..'
+    'b7 b7 .. b8 b8 .. b9 b9 b9 .. c0 .. c1 c1 c1 .. c2 .. .. .. .. .. ..'
+    'b7 b7 .. b8 b8 .. b9 b9 b9 .. .. .. c1 c1 c1 .. .. .. .. .. .. .. ..';
+}
+
+@-webkit-keyframes m-squareGridScaleDelay {
+  0%,
+  70%,
+  100% {
+    -webkit-transform: scale3D(1, 1, 1);
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    -webkit-transform: scale3D(0, 0, 1);
+    transform: scale3D(0, 0, 1);
+  }
+}
+
+@keyframes m-squareGridScaleDelay {
+  0%,
+  70%,
+  100% {
+    -webkit-transform: scale3D(1, 1, 1);
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    -webkit-transform: scale3D(0, 0, 1);
+    transform: scale3D(0, 0, 1);
+  }
+}
+
+@include m-square(a1, 0.3s);
+@include m-square(a2, 0.4s);
+@include m-square(a3, 0.25s);
+@include m-square(a4, 0.35s);
+@include m-square(a5, 0.2s);
+@include m-square(a6, 0.25s);
+@include m-square(a7, 0.3s);
+@include m-square(a8, 0.35s);
+@include m-square(a9, 0.4s);
+@include m-square(b0, 0.45s);
+@include m-square(b1, 0.1s);
+@include m-square(b2, 0.2s);
+@include m-square(b3, 0.25s);
+@include m-square(b4, 0.3s);
+@include m-square(b5, 0.05s);
+@include m-square(b6, 0.15s);
+@include m-square(b7, 0s);
+@include m-square(b8, 0.05s);
+@include m-square(b9, 0.1s);
+@include m-square(c0, 0.15s);
+@include m-square(c1, 0.2s);
+@include m-square(c2, 0.25s);
+@include m-square(c3, 0.45s);
+@include m-square(c4, 0.5s);
+
+// Loading icon inspiration => http://tobiasahlin.com/spinkit/
+
+// first loading icon
+
+// .m-square-grid {
+//   display: grid;
+//   width: 350px;
+//   height: 350px;
+//   margin: auto;
+//   grid-template-columns: 5% 5% 2.5% 10% 2.5% 5% 2.5% 5% 5% 2.5% 10% 2.5% 5% 5% 2.5% 5% 2.5% 10% 2.5% 5% 5%;
+//   grid-template-rows: 5% 5% 2.5% 2.5% 2.5% 2.5% 2.5% 5% 5% 5% 5% 5% 2.5% 2.5% 2.5% 2.5% 2.5% 5% 5% 30%;
+//   grid-template-areas:
+//   ".. .. .. a1 .. .. .. .. .. .. .. .. .. .. .. .. .. a2 .. .. .."
+//   "a3 a3 .. a1 .. .. .. .. .. .. .. .. .. .. .. .. .. a2 .. a4 a4"
+//   "a3 a3 .. .. .. .. .. a5 a5 .. a6 .. a7 a7 .. .. .. .. .. a4 a4"
+//   "a3 a3 .. .. .. a8 .. a5 a5 .. a6 .. a7 a7 .. a9 .. .. .. a4 a4"
+//   ".. .. .. .. .. a8 .. a5 a5 .. a6 .. a7 a7 .. a9 .. .. .. .. .."
+//   "b0 b0 .. .. .. .. .. a5 a5 .. a6 .. a7 a7 .. .. .. .. .. b1 b1"
+//   "b0 b0 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. b1 b1"
+//   "b0 b0 .. .. .. .. .. .. b2 .. b3 .. b4 .. .. .. .. .. .. b1 b1"
+//   ".. .. .. .. .. .. .. .. .. .. b3 .. .. .. .. .. .. .. .. .. .."
+//   ".. b5 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. b6 .."
+//   ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .."
+//   "b7 b7 .. .. .. b8 .. .. .. .. .. .. .. .. .. b9 .. .. .. c0 c0"
+//   "b7 b7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. c0 c0"
+//   "b7 b7 .. .. .. .. .. c1 c1 .. .. .. c2 c2 .. .. .. .. .. c0 c0"
+//   ".. .. .. .. .. c3 .. c1 c1 .. .. .. c2 c2 .. c4 .. .. .. .. .."
+//   "c5 c5 .. .. .. c3 .. c1 c1 .. .. .. c2 c2 .. c4 .. .. .. c6 c6"
+//   "c5 c5 .. .. .. .. .. c1 c1 .. .. .. c2 c2 .. .. .. .. .. c6 c6"
+//   "c5 c5 .. c7 .. .. .. .. .. .. c8 .. .. .. .. .. .. c9 .. c6 c6"
+//   ".. .. .. c7 .. .. .. .. .. .. c8 .. .. .. .. .. .. c9 .. c6 c6";
+// }
+
+// @include m-square(a1, 0.45s);
+// @include m-square(a2, 0.65s);
+// @include m-square(a3, 0.3s);
+// @include m-square(a4, 0.65s);
+// @include m-square(a5, 0.45s);
+// @include m-square(a6, 0.5s);
+// @include m-square(a7, 0.55s);
+// @include m-square(a8, 0.4s);
+// @include m-square(a9, 0.6s);
+// @include m-square(b0, 0.25s);
+// @include m-square(b1, 0.6s);
+// @include m-square(b2, 0.4s);
+// @include m-square(b3, 0.45s);
+// @include m-square(b4, 0.5s);
+// @include m-square(b5, 0.2s);
+// @include m-square(b6, 0.55s);
+// @include m-square(b7, 0.1s);
+// @include m-square(b8, 0.2s);
+// @include m-square(b9, 0.45s);
+// @include m-square(c0, 0.5s);
+// @include m-square(c1, 0.15s);
+// @include m-square(c2, 0.2s);
+// @include m-square(c3, 0.15s);
+// @include m-square(c4, 0.35s);
+// @include m-square(c5, 0s);
+// @include m-square(c6, 0.35s);
+// @include m-square(c7, 0.05s);
+// @include m-square(c8, 0.15s);
+// @include m-square(c9, 0.3s);

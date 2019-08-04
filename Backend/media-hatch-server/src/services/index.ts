@@ -1,13 +1,11 @@
 import { Router } from 'express';
 import allRoutes from './routes';
-import { Factories } from './utils/factories';
-import { TvShowEpisode, Movie } from 'media-hatch-core';
+import { Factories } from 'media-hatch-core';
 
-Factories.register(Movie.typeName, Movie);
-Factories.register(TvShowEpisode.typeName, TvShowEpisode);
+Factories.initialize();
 
 const routes = Router();
 
-routes.use('/', allRoutes);
+routes.use('/api', allRoutes);
 
 export default routes;

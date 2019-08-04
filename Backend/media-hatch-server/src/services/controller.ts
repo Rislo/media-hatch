@@ -4,23 +4,18 @@ import { Request, Response } from 'express';
 
 import { HTTP404Error } from '../utils/http-errors';
 import { Injectable } from 'injection-js';
-import { MediaScraper, Movie } from 'media-hatch-core';
-import { RequestManager } from './request-manager/request-manager';
+import { Factories } from 'media-hatch-core';
 import { WishListsManager } from './wish-lists-manager/wish-lists-manager';
-import { FileNameSanitizer } from './utils/file-name-sanitizer';
-import { Factories } from './utils/factories';
 import { MediaHatchService } from './media-hatch-service';
 
 @Injectable()
 export class Controller {
   private scrapeInfoSchema = {
-    searchTerm: Joi.string().optional(),
+    searchTerm: Joi.string()
+      .optional()
+      .allow(''),
     fromPage: Joi.number().optional(),
     pages: Joi.number().optional()
-  };
-
-  private scrapeLinksSchema = {
-    mediaRawName: Joi.string().required()
   };
 
   private requestSchema = {
@@ -36,11 +31,7 @@ export class Controller {
     mediaType: Joi.string().required()
   };
 
-  constructor(
-    private mediaHatchService: MediaHatchService,
-    private mediaScraper: MediaScraper,
-    private wishListsManager: WishListsManager
-  ) {}
+  constructor(private mediaHatchService: MediaHatchService, private wishListsManager: WishListsManager) {}
 
   public scrapeInfo = async (req: Request, res: Response) => {
     const params = await Joi.validate(req.query, this.scrapeInfoSchema);

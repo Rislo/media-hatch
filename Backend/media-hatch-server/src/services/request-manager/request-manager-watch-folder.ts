@@ -1,7 +1,6 @@
 import * as fs from 'fs-extra';
-import { Media, TvShowEpisode } from 'media-hatch-core';
+import { Media, TvShowEpisode, Factories } from 'media-hatch-core';
 import * as path from 'path';
-import { Factories } from '../utils/factories';
 import { FileNameSanitizer } from '../utils/file-name-sanitizer';
 import { RequestManager } from './request-manager';
 import { Injectable } from 'injection-js';

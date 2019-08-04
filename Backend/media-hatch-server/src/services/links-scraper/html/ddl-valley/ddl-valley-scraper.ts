@@ -17,6 +17,8 @@ export class DdlValleyScraper extends HtmlMediaScraper {
     if (searchTerm) {
       if (this.tryManageSearchTerm(searchTerm)) {
         return this.scrapeInfoInternal(fromPage, pages);
+      } else {
+        return new Array<Media>();
       }
     } else {
       this.customRoute = 'category/tv-shows';

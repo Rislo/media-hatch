@@ -1,0 +1,19 @@
+<main #main class="mat-typography">
+  <div class="header" [class.nav-up]="headerUp">
+    <app-icon></app-icon>
+    <div class="search-container">
+      <mat-icon class="search-icon" color="primary" svgIcon="search"></mat-icon>
+      <mat-form-field> <input matInput (keyup)="searchTerm$.next($event.target.value)" [ngModel]="searchTerm$.value" /> </mat-form-field>
+      <button mat-icon-button color="primary" (click)="clearSearch()" [disabled]="!searchTerm$.value" class="margin-sides">
+        <mat-icon svgIcon="cancel"></mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="page">
+    <div class="container padding"><app-media-container *ngFor="let media of mediaArray" [media]="media"> </app-media-container></div>
+    <div class="fetching-container" *ngIf="fetching"><loading-spinner></loading-spinner></div>
+    <button mat-icon-button *ngIf="!fetching && mediaArray.length > 0" color="primary" (click)="more()">
+      <mat-icon svgIcon="arrow-down"></mat-icon>
+    </button>
+  </div>
+</main>
