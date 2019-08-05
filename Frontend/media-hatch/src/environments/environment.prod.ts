@@ -1,5 +1,5 @@
 const port = 2000;
-const domain = `localhost:${port}`;
+const domain = `127.0.0.1:${port}`;
 
 export const environment = {
   production: true,

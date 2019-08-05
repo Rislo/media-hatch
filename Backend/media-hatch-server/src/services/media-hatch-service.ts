@@ -34,9 +34,10 @@ export class MediaHatchService {
       for (const media of mediaToRequest) {
         this.request(media.rawName);
       }
-      setTimeout(this.lookForNewMedia, this.defaultCycleInterval);
     } catch (error) {
       console.error(`Unexpected error occured => ${error}`);
+    } finally {
+      setTimeout(this.lookForNewMedia, this.defaultCycleInterval);
     }
   };
 

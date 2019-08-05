@@ -1,4 +1,4 @@
-import { Media } from 'media-hatch-core';
+import { Media, Movie } from 'media-hatch-core';
 import { HtmlMediaScraper } from '../html-media-scraper';
 import { HtmlScrapedMediaInfo } from '../html-scraped-media-info';
 import { DdlValleyPostScraper } from './ddl-valley-post-scraper';
@@ -36,7 +36,7 @@ export class DdlValleyScraper extends HtmlMediaScraper {
         scrapedMediaInfo.media.linksPackages = await this.linksScraper.scrape(scrapedMediaInfo);
         return scrapedMediaInfo.media;
       } else {
-        return Promise.resolve(scrapedMediaInfo.media);
+        return scrapedMediaInfo.media;
       }
     } else {
       return null;
@@ -82,6 +82,7 @@ export class DdlValleyScraper extends HtmlMediaScraper {
         } while (!lastLoop);
       }
     } catch (e) {
+      console.error(e);
     } finally {
       return scrapedMedia;
     }
