@@ -8,11 +8,7 @@ Set-Location $serverDirectory
 
 Start-Process npm ("install") -NoNewWindow -Wait
 
-$tsConfigPath = Join-Path $scriptDirectory "Backend\media-hatch-server\tsconfig.json"
-
-$tscArgs = "-p", $tsConfigPath
-
-Start-Process tsc $tscArgs -NoNewWindow -Wait
+Start-Process npm ("run", "build") -NoNewWindow -Wait
 
 $distDirectory = Join-Path $scriptDirectory "Backend\media-hatch-server\dist"
 

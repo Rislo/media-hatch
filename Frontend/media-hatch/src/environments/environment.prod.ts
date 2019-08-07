@@ -6,5 +6,6 @@ export const environment = {
   environmentName: 'prod',
   server: `http://${domain}`,
   apiExtensionUrl: 'api',
-  domain
+  domain,
+  port
 };

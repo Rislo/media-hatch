@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit {
     }, 250);
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll() {
     this.didScroll = true;
   }

@@ -1,4 +1,4 @@
-cd H:\Data\Code\media-hatch\Deploy\media-hatch-server\dist
+cd C:\Data\Code\media-hatch\Deploy\media-hatch-server\dist
 start node server.js
 timeout /t 5
 cd ../../media-hatch

@@ -18,6 +18,9 @@
       </div>
     </div>
   </div>
+  <div class="date-header tile-background">
+    {{ media.uploadDate | date: 'dd/MM/yyyy' }}
+  </div>
   <div class="title-container tile-background">
     <div class="title">
       {{ media.fullName }}

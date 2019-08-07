@@ -4,6 +4,7 @@ import * as path from 'path';
 import { FileNameSanitizer } from '../utils/file-name-sanitizer';
 import { RequestManager } from './request-manager';
 import { Injectable } from 'injection-js';
+import { appRootDir } from '../../server';
 
 @Injectable()
 export class RequestManagerWatchFolder extends RequestManager {
@@ -24,7 +25,8 @@ export class RequestManagerWatchFolder extends RequestManager {
   }
 
   private async initializeOptions() {
-    const fileOptions = (await fs.readFile(RequestManagerWatchFolder.defaultOptionsFile, 'utf8')).replace(/^\ufeff/, ''); // removes BOM if present
+    const optionsPath = path.join(appRootDir, RequestManagerWatchFolder.defaultOptionsFile);
+    const fileOptions = (await fs.readFile(optionsPath, 'utf8')).replace(/^\ufeff/, ''); // removes BOM if present
     const options = fileOptions.split(/\r?\n/);
     for (const option of options) {
       if (option.includes(RequestManagerWatchFolder.mediaTypeWatchFolderSeparator)) {
