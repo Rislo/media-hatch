@@ -1,17 +1,17 @@
-import { MediaDownloadService } from './media-download.service';
-import { WoopsaService } from './../woopsa/woopsa.service';
 import { Injectable } from '@angular/core';
-import { Media, TvShowEpisode, Movie } from 'media-hatch-core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { HttpJsonToObjectService, ConsoleLoggerService } from 'concept';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 import { isUndefined } from 'util';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import { WoopsaValue } from '../woopsa/woopsaValue';
+import { Media, TvShowEpisode, Movie } from 'media-hatch-core';
 
-@Injectable()
-export class MediaInfoService extends WoopsaService {
+@Injectable({
+  providedIn: 'root'
+})
+export class MediaInfoService extends HttpJsonToObjectService {
   private mediaInfo = new BehaviorSubject<Media[]>(new Array<Media>());
   private lastFetchPromise = Promise.resolve<Media[]>(new Array<Media>());
   private currentPage = 0;
@@ -21,16 +21,11 @@ export class MediaInfoService extends WoopsaService {
   lastMediaInfoFetched = this.mediaInfo.asObservable();
   cancelFetch = false;
 
-  constructor(private mediaDownloadService: MediaDownloadService) {
-    super();
-    let hostname = 'localhost';
-    if (window.location.hostname) {
-      hostname = window.location.hostname;
-    }
-    this.setUrl(`http://${hostname}:2000/woopsa`);
+  constructor(http: HttpClient, logger: ConsoleLoggerService) {
+    super(http, logger, `${environment.apiExtensionUrl}`);
     this.searchTerm$
-      .debounceTime(400)
-      .distinctUntilChanged()
+      .pipe(debounceTime(400))
+      .pipe(distinctUntilChanged())
       .subscribe(term => {
         this.currentPage = 0;
         if (!isUndefined(term)) {
@@ -44,9 +39,7 @@ export class MediaInfoService extends WoopsaService {
     this.cancelFetch = true;
     return this.lastFetchPromise.then(done => {
       this.fetching = true;
-      return this.internalFetch(
-        searchTerm ? searchTerm : this.searchTerm$.value
-      );
+      return this.internalFetch(searchTerm ? searchTerm : this.searchTerm$.value);
     });
   }
 
@@ -56,24 +49,24 @@ export class MediaInfoService extends WoopsaService {
     if (searchTerm) {
       validSearchTerm = searchTerm;
     }
-    this.lastFetchPromise = this.invoke('scrapeInfoAsync', {
-      searchTerm: validSearchTerm,
-      fromPage: this.currentPage,
-      pages: 2
-    }).then(value => {
-      this.currentPage += 2;
-      return this.mediaArrayFromScrape(value);
-    });
+    let httpParams = this.setHttpParams('searchTerm', validSearchTerm);
+    httpParams = this.setHttpParams('fromPage', this.currentPage, httpParams);
+    httpParams = this.setHttpParams('pages', 2, httpParams);
+    this.lastFetchPromise = this.get('/media', { params: httpParams })
+      .pipe(
+        map(value => {
+          this.currentPage += 2;
+          return this.typedMediaArrayFromObjectArray(value);
+        })
+      )
+      .toPromise();
     return this.lastFetchPromise;
   }
 
-  private mediaArrayFromScrape(
-    scrapeReturn: WoopsaValue,
-    concat = true
-  ): Promise<Media[]> {
+  private typedMediaArrayFromObjectArray(objects): Media[] {
     try {
       const mediaArray = new Array<Media>();
-      for (const mediaObject of JSON.parse(scrapeReturn.asText)) {
+      for (const mediaObject of objects) {
         if (mediaObject.type === TvShowEpisode.typeName) {
           mediaArray.push(Object.assign(new TvShowEpisode(), mediaObject));
         } else if (mediaObject.type === Movie.typeName) {
@@ -81,23 +74,15 @@ export class MediaInfoService extends WoopsaService {
         }
       }
       if (this.cancelFetch) {
-        return Promise.resolve(new Array<Media>());
+        return new Array<Media>();
       } else {
-        return this.mediaDownloadService
-          .updateProcessedMediaRawNames(mediaArray)
-          .then(completed => {
-            if (!concat) {
-              this.mediaInfo.next(mediaArray);
-            } else {
-              this.mediaInfo.next(this.mediaInfo.value.concat(mediaArray));
-            }
-            this.fetching = false;
-            return mediaArray;
-          });
+        this.mediaInfo.next(this.mediaInfo.value.concat(mediaArray));
+        this.fetching = false;
+        return mediaArray;
       }
     } catch (e) {
       this.fetching = false;
-      return Promise.resolve(new Array<Media>());
+      return new Array<Media>();
     }
   }
 }

@@ -1,6 +1,7 @@
-import { MediaDownloadService } from './../services/media-download.service';
-import { Media, Movie } from 'media-hatch-core';
+import { Media } from 'media-hatch-core';
 import { Component, OnInit, Input } from '@angular/core';
+import { MediaRequestService } from '../services/media-request.service';
+import { MediaWishListsService } from '../services/media-wish-lists.service';
 
 @Component({
   selector: 'app-media-container',
@@ -10,45 +11,40 @@ import { Component, OnInit, Input } from '@angular/core';
 export class MediaContainerComponent implements OnInit {
   @Input() public media: Media;
 
-  public processed = false;
-  public processing = false;
+  public requesting = false;
   public inWishList = false;
   public addingToWishList = false;
 
-  constructor(private downloadService: MediaDownloadService) {}
+  constructor(private requestService: MediaRequestService, private wishListsService: MediaWishListsService) {}
 
   ngOnInit() {
-    this.updateStates();
+    this.updateIsInWishList();
   }
 
-  download() {
-    this.processing = true;
-    this.downloadService
-      .download(this.media)
-      .then(downloaded => {
-        this.updateStates();
-        this.processing = false;
+  request() {
+    this.requesting = true;
+    this.requestService
+      .request(this.media)
+      .then(requested => {
+        this.updateIsInWishList();
+        this.media.requested = requested;
+        this.requesting = false;
       })
-      .catch(error => (this.processing = false));
+      .catch(error => (this.requesting = false));
   }
 
-  addToWishList() {
+  async addToWishList() {
     this.addingToWishList = true;
-    this.downloadService
-      .addToWishList(this.media)
-      .then(added => {
-        this.updateStates();
-        this.addingToWishList = false;
-      })
-      .catch(error => (this.addingToWishList = false));
+    try {
+      const added = await this.wishListsService.addToWishList(this.media);
+      this.inWishList = added;
+    } catch {
+    } finally {
+      this.addingToWishList = false;
+    }
   }
 
-  private updateStates() {
-    this.processed = this.downloadService.isProcessed(this.media);
-    if (this.media instanceof Movie && this.processed) {
-      this.inWishList = true;
-    } else {
-      this.inWishList = this.downloadService.isInWishList(this.media);
-    }
+  private async updateIsInWishList() {
+    this.inWishList = await this.wishListsService.isInWishList(this.media);
   }
 }

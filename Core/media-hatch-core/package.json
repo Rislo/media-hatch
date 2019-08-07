@@ -1,0 +1,24 @@
+{
+  "name": "media-hatch-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Loris Christinat",
+  "license": "ISC",
+  "files": [
+    "/dist"
+  ],
+  "devDependencies": {
+    "typescript": "^2.5.3",
+    "json2typescript": "^1.2.3"
+  },
+  "peerDependencies": {
+    "json2typescript": "^1.2.3"
+  }
+}

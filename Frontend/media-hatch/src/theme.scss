@@ -91,6 +91,8 @@ $title-foreground: #3f3f3f;
 
 $size-foreground: #5c5c5c;
 
+$date-foreground: #777777;
+
 $description-foreground: #291044;
 
 $tile-background: #f2f2f2;
@@ -107,37 +109,36 @@ $foreground-inverse: white;
 
 // define a real custom palette (using http://mcg.mbitson.com)
 $mh-primary: (
-  50 : #ebe6f0,
-  100 : #cec0da,
-  200 : #ad96c2,
-  300 : #8c6ca9,
-  400 : #734d96,
-  500 : $primary500,
-  600 : #52287c,
-  700 : #482271,
-  800 : #3f1c67,
-  900 : #2e1154,
-  A100 : #b98cff,
-  A200 : #9a59ff,
-  A400 : #7b26ff,
-  A700 : #6c0dff,
-  contrast:
-    (
-      50 : #000000,
-      100 : #000000,
-      200 : #000000,
-      300 : #ffffff,
-      400 : #ffffff,
-      500 : #ffffff,
-      600 : #ffffff,
-      700 : #ffffff,
-      800 : #ffffff,
-      900 : #ffffff,
-      A100 : #000000,
-      A200 : #ffffff,
-      A400 : #ffffff,
-      A700 : #ffffff
-    )
+  50: #ebe6f0,
+  100: #cec0da,
+  200: #ad96c2,
+  300: #8c6ca9,
+  400: #734d96,
+  500: $primary500,
+  600: #52287c,
+  700: #482271,
+  800: #3f1c67,
+  900: #2e1154,
+  A100: #b98cff,
+  A200: #9a59ff,
+  A400: #7b26ff,
+  A700: #6c0dff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff
+  )
 );
 // mandatory stuff for theming
 $mh-pp-primary: mat-palette($mh-primary);

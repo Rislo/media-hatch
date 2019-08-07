@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { MediaInfoService } from './../services/media-info.service';
 import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Media } from 'media-hatch-core';
@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
 
   private allMedia: Observable<Media[]>;
 
-  @ViewChild('main') private mainEl: ElementRef;
+  @ViewChild('main', { static: false }) private mainEl: ElementRef;
 
   public headerUp = false;
 
@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit {
     }, 250);
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll() {
     this.didScroll = true;
   }
