@@ -1,0 +1,10 @@
+[
+  {
+    "eventTrigger": "ON_ARCHIVE_EXTRACTED",
+    "enabled": true,
+    "name": "Rename extracted archive with package name",
+    "script": "//Add your script here. Feel free to use the available api properties and methods\nvar myArchive = archive;\nvar downloadLinks = myArchive.getDownloadLinks();\nvar newFileName = downloadLinks[0].getComment();\nif (newFileName) {\n\tvar filePaths = myArchive.getExtractedFilePaths();\n\tif (filePaths.length > 1) {\n\t\tvar separatorIndex = newFileName.toLowerCase().search(/e\\d+/);\n\t\tvar newFileNamePrefix = newFileName.substring(0, separatorIndex);\n\t\tfor (var i = 0; i < filePaths.length; i++) {\n\t\t\tvar originalTitle = filePaths[i]\n\t\t\t\t.getName()\n\t\t\t\t.split('.')[0]\n\t\t\t\t.toLowerCase();\n\t\t\tvar episodeNbIndex = originalTitle.lastIndexOf('e');\n\t\t\tvar episodeNb = +originalTitle.substr(episodeNbIndex + 1);\n\t\t\tvar episodeNbString = episodeNb < 10 ? '0' + episodeNb.toString() : episodeNb.toString();\n\t\t\tvar newFilePath =\n\t\t\t\tfilePaths[i].getParent().getPath() + '/' + newFileNamePrefix + 'E' + episodeNbString + '.' + filePaths[i].getExtension();\n\t\t\tfilePaths[i].renameTo(newFilePath);\n\t\t}\n\t} else {\n\t\tvar newFilePath = filePaths[0].getParent().getPath() + '/' + newFileName + '.' + filePaths[0].getExtension();\n\t\tfilePaths[0].renameTo(newFilePath);\n\t}\n}\n",
+    "eventTriggerSettings": { "isSynchronous": false },
+    "id": 1564672242783
+  }
+]
